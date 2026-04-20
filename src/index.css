@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ── Base reset ──────────────────────────────────────────────────────── */
+/* ── Base ────────────────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
@@ -30,15 +30,15 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.2);
+  background: rgba(113, 113, 122, 0.2);
   border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.3);
+  background: rgba(113, 113, 122, 0.35);
 }
 
-/* ── React Flow overrides ────────────────────────────────────────────── */
+/* ── React Flow ──────────────────────────────────────────────────────── */
 .react-flow__node {
   border: none !important;
   box-shadow: none !important;
@@ -68,21 +68,19 @@ body {
 }
 
 .react-flow__controls button {
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .react-flow__controls button svg {
   fill: currentColor;
 }
 
-/* ── Selection box ───────────────────────────────────────────────────── */
 .react-flow__selection {
-  border: 1px solid rgba(96, 165, 250, 0.3) !important;
-  background: rgba(96, 165, 250, 0.04) !important;
+  border: 1px solid rgba(96, 165, 250, 0.25) !important;
+  background: rgba(96, 165, 250, 0.03) !important;
   border-radius: 6px;
 }
 
-/* ── Animated edges ──────────────────────────────────────────────────── */
 .react-flow__edge.animated path {
   stroke-dasharray: 5;
   animation: flow-dash 0.8s linear infinite;
@@ -94,19 +92,25 @@ body {
   }
 }
 
-/* ── Connection line ─────────────────────────────────────────────────── */
 .react-flow__connection-path {
   stroke: #60a5fa !important;
   stroke-width: 2 !important;
 }
 
-/* ── Select dropdown fix ─────────────────────────────────────────────── */
+/* ── Select dropdown ─────────────────────────────────────────────────── */
 [data-theme="dark"] select option {
-  background: #1e293b;
-  color: #cbd5e1;
+  background: #27272a;
+  color: #d4d4d8;
 }
 
 [data-theme="light"] select option {
   background: #ffffff;
-  color: #334155;
+  color: #3f3f46;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .react-flow__minimap {
+    display: none !important;
+  }
 }

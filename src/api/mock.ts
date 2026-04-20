@@ -10,21 +10,19 @@ const automations: Automation[] = [
 ];
 
 export async function fetchAutomations(): Promise<Automation[]> {
-  await delay(400);
+  await delay(300);
   return automations;
 }
 
 // ── POST /simulate ──────────────────────────────────────────────────────
-export async function simulateWorkflow(
-  nodes: FlowNode[]
-): Promise<SimulationLog[]> {
+export async function simulateWorkflow(nodes: FlowNode[]): Promise<SimulationLog[]> {
   const logs: SimulationLog[] = [];
-  
+
   for (let i = 0; i < nodes.length; i++) {
-    await delay(600 + Math.random() * 400);
+    await delay(500 + Math.random() * 300);
     const node = nodes[i];
     const data = node.data;
-    
+
     logs.push({
       id: `log-${Date.now()}-${i}`,
       timestamp: new Date().toISOString(),
@@ -53,6 +51,10 @@ function getSimMessage(type: string, label: string): string {
     task: `⚡ Task "${label}" executed`,
     approval: `✓ Approval "${label}" granted`,
     automated: `⚙ Automation "${label}" triggered`,
+    condition: `⑂ Condition "${label}" evaluated → true`,
+    delay: `⏳ Delay "${label}" waited`,
+    notification: `🔔 Notification "${label}" sent`,
+    loop: `↻ Loop "${label}" completed iteration`,
     end: `■ Workflow completed at "${label}"`,
   };
   return msgs[type] || `Processed "${label}"`;

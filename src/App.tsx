@@ -15,9 +15,11 @@ export default function App() {
 
   return (
     <ReactFlowProvider>
-      <div className={`flex h-screen w-screen flex-col overflow-hidden transition-colors
-        ${theme === 'dark' ? 'bg-slate-950 text-slate-200' : 'bg-slate-100 text-slate-800'}
-      `}>
+      <div
+        className={`flex h-screen w-screen flex-col overflow-hidden transition-colors duration-200
+          ${theme === 'dark' ? 'bg-zinc-950 text-zinc-200' : 'bg-[#f0f0f0] text-zinc-700'}
+        `}
+      >
         <TopBar />
         <div className="flex flex-1 overflow-hidden">
           <Sidebar />

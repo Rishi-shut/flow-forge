@@ -1,7 +1,16 @@
 import type { Node, Edge } from '@xyflow/react';
 
 // ── Node Types ──────────────────────────────────────────────────────────
-export type FlowNodeType = 'start' | 'task' | 'approval' | 'automated' | 'end';
+export type FlowNodeType =
+  | 'start'
+  | 'task'
+  | 'approval'
+  | 'automated'
+  | 'condition'
+  | 'delay'
+  | 'notification'
+  | 'loop'
+  | 'end';
 
 export interface StartNodeData {
   type: 'start';
@@ -35,6 +44,39 @@ export interface AutomatedNodeData {
   [key: string]: unknown;
 }
 
+export interface ConditionNodeData {
+  type: 'condition';
+  label: string;
+  field: string;
+  operator: string;
+  value: string;
+  [key: string]: unknown;
+}
+
+export interface DelayNodeData {
+  type: 'delay';
+  label: string;
+  duration: number;
+  unit: string;
+  [key: string]: unknown;
+}
+
+export interface NotificationNodeData {
+  type: 'notification';
+  label: string;
+  channel: string;
+  message: string;
+  [key: string]: unknown;
+}
+
+export interface LoopNodeData {
+  type: 'loop';
+  label: string;
+  iterations: number;
+  collection: string;
+  [key: string]: unknown;
+}
+
 export interface EndNodeData {
   type: 'end';
   label: string;
@@ -46,6 +88,10 @@ export type FlowNodeData =
   | TaskNodeData
   | ApprovalNodeData
   | AutomatedNodeData
+  | ConditionNodeData
+  | DelayNodeData
+  | NotificationNodeData
+  | LoopNodeData
   | EndNodeData;
 
 export type FlowNode = Node<FlowNodeData, FlowNodeType>;
@@ -77,6 +123,7 @@ export interface NodePaletteItem {
   type: FlowNodeType;
   label: string;
   description: string;
+  tooltip: string;
   color: string;
   gradient: string;
 }

@@ -19,14 +19,8 @@ import type { FlowNode, FlowNodeType } from '@/types';
 
 export default function Canvas() {
   const {
-    nodes,
-    edges,
-    onNodesChange,
-    onEdgesChange,
-    onConnect,
-    addNode,
-    setSelectedNodeId,
-    theme,
+    nodes, edges, onNodesChange, onEdgesChange, onConnect,
+    addNode, setSelectedNodeId, theme,
   } = useWorkflowStore();
 
   const isDark = theme === 'dark';
@@ -61,17 +55,13 @@ export default function Canvas() {
   );
 
   const onNodeClick = useCallback(
-    (_: React.MouseEvent, node: FlowNode) => {
-      setSelectedNodeId(node.id);
-    },
+    (_: React.MouseEvent, node: FlowNode) => setSelectedNodeId(node.id),
     [setSelectedNodeId]
   );
 
-  const onPaneClick = useCallback(() => {
-    setSelectedNodeId(null);
-  }, [setSelectedNodeId]);
+  const onPaneClick = useCallback(() => setSelectedNodeId(null), [setSelectedNodeId]);
 
-  const edgeStroke = isDark ? '#475569' : '#cbd5e1';
+  const edgeStroke = isDark ? '#3f3f46' : '#d4d4d8';
 
   return (
     <div className="relative flex-1 overflow-hidden">
@@ -100,45 +90,36 @@ export default function Canvas() {
           animated: true,
           style: { stroke: edgeStroke, strokeWidth: 1.5 },
         }}
-        connectionLineStyle={{ stroke: '#60a5fa', strokeWidth: 2 }}
+        connectionLineStyle={{ stroke: '#60a5fa', strokeWidth: 2, strokeDasharray: '6 3' }}
         proOptions={{ hideAttribution: true }}
-        className={isDark ? '!bg-slate-950' : '!bg-slate-100'}
+        className={isDark ? '!bg-zinc-950' : '!bg-[#f0f0f0]'}
       >
         <Background
           variant={BackgroundVariant.Dots}
           gap={20}
           size={1}
-          color={isDark ? 'rgba(148,163,184,0.06)' : 'rgba(100,116,139,0.12)'}
+          color={isDark ? 'rgba(113,113,122,0.08)' : 'rgba(113,113,122,0.15)'}
         />
         <Controls
           className={`
             !rounded-lg !border !shadow-sm
             ${isDark
-              ? '!border-slate-800 !bg-slate-900 [&>button]:!border-slate-800 [&>button]:!bg-transparent [&>button]:!text-slate-500 [&>button:hover]:!bg-slate-800 [&>button:hover]:!text-slate-300'
-              : '!border-slate-200 !bg-white [&>button]:!border-slate-200 [&>button]:!bg-transparent [&>button]:!text-slate-400 [&>button:hover]:!bg-slate-50 [&>button:hover]:!text-slate-600'
+              ? '!border-zinc-800 !bg-zinc-900 [&>button]:!border-zinc-800 [&>button]:!bg-transparent [&>button]:!text-zinc-500 [&>button:hover]:!bg-zinc-800 [&>button:hover]:!text-zinc-300'
+              : '!border-zinc-300 !bg-[#f5f5f5] [&>button]:!border-zinc-300 [&>button]:!bg-transparent [&>button]:!text-zinc-400 [&>button:hover]:!bg-zinc-200 [&>button:hover]:!text-zinc-600'
             }
           `}
           showInteractive={false}
         />
         <MiniMap
-          className={`
-            !rounded-lg !border
-            ${isDark
-              ? '!border-slate-800 !bg-slate-900'
-              : '!border-slate-200 !bg-white'
-            }
-          `}
+          className={`!rounded-lg !border ${isDark ? '!border-zinc-800 !bg-zinc-900' : '!border-zinc-300 !bg-[#f5f5f5]'}`}
           nodeColor={(node) => {
             const colors: Record<string, string> = {
-              start: '#4ade80',
-              task: '#60a5fa',
-              approval: '#fbbf24',
-              automated: '#c084fc',
-              end: '#f87171',
+              start: '#4ade80', task: '#60a5fa', approval: '#fbbf24', automated: '#c084fc',
+              condition: '#2dd4bf', delay: '#fb923c', notification: '#f472b6', loop: '#a78bfa', end: '#f87171',
             };
             return colors[node.type ?? ''] ?? '#94a3b8';
           }}
-          maskColor={isDark ? 'rgba(2,6,23,0.75)' : 'rgba(241,245,249,0.75)'}
+          maskColor={isDark ? 'rgba(9,9,11,0.75)' : 'rgba(240,240,240,0.75)'}
         />
       </ReactFlow>
 

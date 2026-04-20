@@ -15,96 +15,75 @@ interface BaseNodeProps {
   showTarget?: boolean;
 }
 
-function BaseNode({
-  id,
-  type,
-  label,
-  icon,
-  selected,
-  children,
-  showSource = true,
-  showTarget = true,
-}: BaseNodeProps) {
+function BaseNode({ id, type, label, icon, selected, children, showSource = true, showTarget = true }: BaseNodeProps) {
   const color = getNodeColor(type);
   const theme = useWorkflowStore((s) => s.theme);
   const setSelectedNodeId = useWorkflowStore((s) => s.setSelectedNodeId);
   const connection = useConnection();
   const isConnecting = connection.inProgress;
-
   const isDark = theme === 'dark';
 
   return (
     <motion.div
-      initial={{ scale: 0.9, opacity: 0 }}
+      initial={{ scale: 0.92, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 350, damping: 28 }}
       onClick={() => setSelectedNodeId(id)}
       className="group relative"
     >
-      {/* Subtle selection ring */}
       {selected && (
         <motion.div
-          className="absolute -inset-[3px] rounded-xl border-2"
-          style={{ borderColor: `${color}80` }}
+          className="absolute -inset-[2px] rounded-[10px] border-[1.5px]"
+          style={{ borderColor: `${color}70` }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         />
       )}
 
       <div
-        className={`
-          relative min-w-[190px] rounded-xl border transition-all duration-150
+        className={`relative min-w-[170px] rounded-lg border transition-all duration-150
           ${isDark
             ? selected
-              ? 'border-slate-600 bg-slate-800/90 shadow-lg shadow-black/20'
-              : 'border-slate-700/60 bg-slate-800/70 shadow-md shadow-black/10 hover:border-slate-600 hover:shadow-lg'
+              ? 'border-zinc-600 bg-zinc-800 shadow-lg shadow-black/15'
+              : 'border-zinc-700/50 bg-zinc-800/80 shadow-sm hover:border-zinc-600 hover:shadow-md'
             : selected
-              ? 'border-slate-300 bg-white shadow-lg shadow-slate-200/60'
-              : 'border-slate-200 bg-white shadow-sm hover:border-slate-300 hover:shadow-md'
+              ? 'border-zinc-300 bg-white shadow-md shadow-zinc-300/40'
+              : 'border-zinc-200 bg-white shadow-sm hover:border-zinc-300 hover:shadow-md'
           }
         `}
       >
-        {/* Colored top bar */}
-        <div className="h-[3px] rounded-t-xl" style={{ backgroundColor: color }} />
+        {/* Top accent */}
+        <div className="h-[2px] rounded-t-lg" style={{ backgroundColor: color }} />
 
         {/* Header */}
-        <div className="flex items-center gap-2.5 px-3.5 py-2.5">
-          <div
-            className="flex h-7 w-7 items-center justify-center rounded-md"
-            style={{ backgroundColor: `${color}18`, color }}
-          >
+        <div className="flex items-center gap-2 px-3 py-2">
+          <div className="flex h-6 w-6 items-center justify-center rounded" style={{ backgroundColor: `${color}15`, color }}>
             {icon}
           </div>
           <div className="flex flex-col min-w-0">
-            <span className={`text-[13px] font-medium truncate ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>
-              {label}
-            </span>
-            <span className={`text-[10px] font-medium uppercase tracking-wider ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
-              {type}
-            </span>
+            <span className={`text-[12px] font-medium leading-tight truncate ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`}>{label}</span>
+            <span className={`text-[9px] font-medium uppercase tracking-wider ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>{type}</span>
           </div>
         </div>
 
-        {/* Body */}
         {children && (
-          <div className={`border-t px-3.5 py-2 text-xs ${isDark ? 'border-slate-700/50 text-slate-400' : 'border-slate-100 text-slate-500'}`}>
+          <div className={`border-t px-3 py-1.5 text-[11px] ${isDark ? 'border-zinc-700/40 text-zinc-500' : 'border-zinc-100 text-zinc-500'}`}>
             {children}
           </div>
         )}
       </div>
 
-      {/* Handles — larger hit area for easier connecting */}
+      {/* Handles */}
       {showTarget && (
         <Handle
           type="target"
           position={Position.Top}
-          className={`
-            !-top-[6px] !h-3 !w-3 !rounded-full !border-2 transition-all duration-150
+          className={`!-top-[5px] !h-2.5 !w-2.5 !rounded-full !border-[1.5px] transition-all duration-150
             ${isConnecting
-              ? `!border-blue-400 !bg-blue-400 !shadow-[0_0_8px_rgba(96,165,250,0.5)] !scale-125`
+              ? '!border-blue-400 !bg-blue-400 !shadow-[0_0_6px_rgba(96,165,250,0.5)] !scale-[1.4]'
               : isDark
-                ? '!border-slate-500 !bg-slate-700 hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-125'
-                : '!border-slate-300 !bg-white hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-125'
+                ? '!border-zinc-600 !bg-zinc-800 hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-[1.3]'
+                : '!border-zinc-300 !bg-white hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-[1.3]'
             }
           `}
         />
@@ -113,13 +92,12 @@ function BaseNode({
         <Handle
           type="source"
           position={Position.Bottom}
-          className={`
-            !-bottom-[6px] !h-3 !w-3 !rounded-full !border-2 transition-all duration-150
+          className={`!-bottom-[5px] !h-2.5 !w-2.5 !rounded-full !border-[1.5px] transition-all duration-150
             ${isConnecting
-              ? `!border-blue-400 !bg-blue-400 !shadow-[0_0_8px_rgba(96,165,250,0.5)] !scale-125`
+              ? '!border-blue-400 !bg-blue-400 !shadow-[0_0_6px_rgba(96,165,250,0.5)] !scale-[1.4]'
               : isDark
-                ? '!border-slate-500 !bg-slate-700 hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-125'
-                : '!border-slate-300 !bg-white hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-125'
+                ? '!border-zinc-600 !bg-zinc-800 hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-[1.3]'
+                : '!border-zinc-300 !bg-white hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-[1.3]'
             }
           `}
         />

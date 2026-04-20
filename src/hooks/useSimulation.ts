@@ -22,8 +22,16 @@ export function useSimulation() {
     if (!consoleOpen) toggleConsole();
 
     try {
+      // Fetch all logs from mock
       const logs = await simulateWorkflow(nodes);
-      logs.forEach((log) => addSimulationLog(log));
+      
+      // Instead of adding them all at once, stream them with delays
+      // to give the user a real-time "execution" feel.
+      for (const log of logs) {
+        // Wait 800ms between each log to simulate processing time
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        addSimulationLog(log);
+      }
     } finally {
       setIsSimulating(false);
       setStatus('active');
