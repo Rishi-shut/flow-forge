@@ -15,6 +15,8 @@ import type {
   WorkflowStatus,
 } from '@/types';
 
+export type Theme = 'light' | 'dark';
+
 interface WorkflowState {
   // ── Graph ───────────────────────────────────────────────────────
   nodes: FlowNode[];
@@ -36,6 +38,8 @@ interface WorkflowState {
   toggleSidebar: () => void;
   consoleOpen: boolean;
   toggleConsole: () => void;
+  theme: Theme;
+  toggleTheme: () => void;
 
   // ── Workflow Meta ───────────────────────────────────────────────
   projectName: string;
@@ -65,25 +69,30 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   onEdgesChange: (changes) =>
     set({ edges: applyEdgeChanges(changes, get().edges) }),
 
-  onConnect: (connection) =>
+  onConnect: (connection) => {
+    const theme = get().theme;
+    const strokeColor = theme === 'dark' ? '#64748b' : '#94a3b8';
     set({
       edges: addEdge(
         {
           ...connection,
           type: 'smoothstep',
           animated: true,
-          style: { stroke: '#6366f1', strokeWidth: 2 },
+          style: { stroke: strokeColor, strokeWidth: 1.5 },
         },
         get().edges
       ),
-    }),
+    });
+  },
 
   addNode: (node) => set({ nodes: [...get().nodes, node] }),
 
   updateNodeData: (nodeId, data) =>
     set({
       nodes: get().nodes.map((n) =>
-        n.id === nodeId ? { ...n, data: { ...n.data, ...data } as FlowNodeData } : n
+        n.id === nodeId
+          ? { ...n, data: { ...n.data, ...data } as FlowNodeData }
+          : n
       ),
     }),
 
@@ -109,6 +118,12 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   toggleSidebar: () => set({ sidebarOpen: !get().sidebarOpen }),
   consoleOpen: false,
   toggleConsole: () => set({ consoleOpen: !get().consoleOpen }),
+  theme: 'dark',
+  toggleTheme: () => {
+    const next = get().theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    set({ theme: next });
+  },
 
   // ── Workflow Meta ─────────────────────────────────────────────────
   projectName: 'Untitled Workflow',

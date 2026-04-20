@@ -26,77 +26,86 @@ function BaseNode({
   showTarget = true,
 }: BaseNodeProps) {
   const color = getNodeColor(type);
+  const theme = useWorkflowStore((s) => s.theme);
   const setSelectedNodeId = useWorkflowStore((s) => s.setSelectedNodeId);
   const connection = useConnection();
   const isConnecting = connection.inProgress;
 
+  const isDark = theme === 'dark';
+
   return (
     <motion.div
-      initial={{ scale: 0.8, opacity: 0 }}
+      initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+      transition={{ type: 'spring', stiffness: 350, damping: 28 }}
       onClick={() => setSelectedNodeId(id)}
       className="group relative"
     >
-      {/* Glow ring on selection */}
+      {/* Subtle selection ring */}
       {selected && (
         <motion.div
-          layoutId="node-glow"
-          className="absolute -inset-1 rounded-2xl opacity-40 blur-md"
-          style={{ backgroundColor: color }}
+          className="absolute -inset-[3px] rounded-xl border-2"
+          style={{ borderColor: `${color}80` }}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.4 }}
+          animate={{ opacity: 1 }}
         />
       )}
 
       <div
         className={`
-          relative min-w-[180px] rounded-2xl border backdrop-blur-xl
-          transition-all duration-200
-          ${selected
-            ? 'border-white/30 shadow-lg shadow-black/10'
-            : 'border-white/10 shadow-md shadow-black/5 hover:border-white/20 hover:shadow-lg'
+          relative min-w-[190px] rounded-xl border transition-all duration-150
+          ${isDark
+            ? selected
+              ? 'border-slate-600 bg-slate-800/90 shadow-lg shadow-black/20'
+              : 'border-slate-700/60 bg-slate-800/70 shadow-md shadow-black/10 hover:border-slate-600 hover:shadow-lg'
+            : selected
+              ? 'border-slate-300 bg-white shadow-lg shadow-slate-200/60'
+              : 'border-slate-200 bg-white shadow-sm hover:border-slate-300 hover:shadow-md'
           }
         `}
-        style={{
-          background: `linear-gradient(135deg, ${color}12 0%, rgba(15,15,20,0.85) 100%)`,
-        }}
       >
+        {/* Colored top bar */}
+        <div className="h-[3px] rounded-t-xl" style={{ backgroundColor: color }} />
+
         {/* Header */}
-        <div className="flex items-center gap-2.5 px-4 py-3">
+        <div className="flex items-center gap-2.5 px-3.5 py-2.5">
           <div
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-white"
-            style={{ backgroundColor: `${color}30` }}
+            className="flex h-7 w-7 items-center justify-center rounded-md"
+            style={{ backgroundColor: `${color}18`, color }}
           >
             {icon}
           </div>
-          <div className="flex flex-col">
-            <span className="text-xs font-semibold text-white/90">{label}</span>
-            <span className="text-[10px] font-medium uppercase tracking-wider text-white/40">
+          <div className="flex flex-col min-w-0">
+            <span className={`text-[13px] font-medium truncate ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>
+              {label}
+            </span>
+            <span className={`text-[10px] font-medium uppercase tracking-wider ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
               {type}
             </span>
           </div>
-          <div
-            className="ml-auto h-2 w-2 rounded-full"
-            style={{ backgroundColor: color }}
-          />
         </div>
 
-        {/* Body (optional extra content) */}
+        {/* Body */}
         {children && (
-          <div className="border-t border-white/5 px-4 py-2.5 text-xs text-white/60">
+          <div className={`border-t px-3.5 py-2 text-xs ${isDark ? 'border-slate-700/50 text-slate-400' : 'border-slate-100 text-slate-500'}`}>
             {children}
           </div>
         )}
       </div>
 
-      {/* Handles with glow */}
+      {/* Handles — larger hit area for easier connecting */}
       {showTarget && (
         <Handle
           type="target"
           position={Position.Top}
-          className={`!h-3 !w-3 !rounded-full !border-2 !bg-gray-900 transition-all
-            ${isConnecting ? '!border-indigo-400 !shadow-[0_0_8px_rgba(99,102,241,0.6)]' : '!border-white/30'}
+          className={`
+            !-top-[6px] !h-3 !w-3 !rounded-full !border-2 transition-all duration-150
+            ${isConnecting
+              ? `!border-blue-400 !bg-blue-400 !shadow-[0_0_8px_rgba(96,165,250,0.5)] !scale-125`
+              : isDark
+                ? '!border-slate-500 !bg-slate-700 hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-125'
+                : '!border-slate-300 !bg-white hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-125'
+            }
           `}
         />
       )}
@@ -104,8 +113,14 @@ function BaseNode({
         <Handle
           type="source"
           position={Position.Bottom}
-          className={`!h-3 !w-3 !rounded-full !border-2 !bg-gray-900 transition-all
-            ${isConnecting ? '!border-indigo-400 !shadow-[0_0_8px_rgba(99,102,241,0.6)]' : '!border-white/30'}
+          className={`
+            !-bottom-[6px] !h-3 !w-3 !rounded-full !border-2 transition-all duration-150
+            ${isConnecting
+              ? `!border-blue-400 !bg-blue-400 !shadow-[0_0_8px_rgba(96,165,250,0.5)] !scale-125`
+              : isDark
+                ? '!border-slate-500 !bg-slate-700 hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-125'
+                : '!border-slate-300 !bg-white hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-125'
+            }
           `}
         />
       )}

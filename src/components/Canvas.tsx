@@ -6,6 +6,7 @@ import {
   MiniMap,
   BackgroundVariant,
   type ReactFlowInstance,
+  ConnectionMode,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -25,8 +26,10 @@ export default function Canvas() {
     onConnect,
     addNode,
     setSelectedNodeId,
+    theme,
   } = useWorkflowStore();
 
+  const isDark = theme === 'dark';
   const reactFlowInstance = useRef<ReactFlowInstance<FlowNode> | null>(null);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
@@ -37,10 +40,7 @@ export default function Canvas() {
   const onDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
-
-      const nodeType = event.dataTransfer.getData(
-        'application/flowforge-node'
-      ) as FlowNodeType;
+      const nodeType = event.dataTransfer.getData('application/flowforge-node') as FlowNodeType;
       if (!nodeType || !reactFlowInstance.current) return;
 
       const position = reactFlowInstance.current.screenToFlowPosition({
@@ -71,6 +71,8 @@ export default function Canvas() {
     setSelectedNodeId(null);
   }, [setSelectedNodeId]);
 
+  const edgeStroke = isDark ? '#475569' : '#cbd5e1';
+
   return (
     <div className="relative flex-1 overflow-hidden">
       {nodes.length === 0 && <EmptyState />}
@@ -92,37 +94,51 @@ export default function Canvas() {
         fitView
         snapToGrid
         snapGrid={[16, 16]}
+        connectionMode={ConnectionMode.Loose}
         defaultEdgeOptions={{
           type: 'smoothstep',
           animated: true,
-          style: { stroke: '#6366f1', strokeWidth: 2 },
+          style: { stroke: edgeStroke, strokeWidth: 1.5 },
         }}
+        connectionLineStyle={{ stroke: '#60a5fa', strokeWidth: 2 }}
         proOptions={{ hideAttribution: true }}
-        className="!bg-[#0a0a0f]"
+        className={isDark ? '!bg-slate-950' : '!bg-slate-100'}
       >
         <Background
           variant={BackgroundVariant.Dots}
           gap={20}
           size={1}
-          color="rgba(255,255,255,0.04)"
+          color={isDark ? 'rgba(148,163,184,0.06)' : 'rgba(100,116,139,0.12)'}
         />
         <Controls
-          className="!rounded-xl !border !border-white/[0.06] !bg-[#0c0c10]/90 !shadow-xl !backdrop-blur-xl [&>button]:!border-white/[0.06] [&>button]:!bg-transparent [&>button]:!text-white/40 [&>button:hover]:!bg-white/5 [&>button:hover]:!text-white/80"
+          className={`
+            !rounded-lg !border !shadow-sm
+            ${isDark
+              ? '!border-slate-800 !bg-slate-900 [&>button]:!border-slate-800 [&>button]:!bg-transparent [&>button]:!text-slate-500 [&>button:hover]:!bg-slate-800 [&>button:hover]:!text-slate-300'
+              : '!border-slate-200 !bg-white [&>button]:!border-slate-200 [&>button]:!bg-transparent [&>button]:!text-slate-400 [&>button:hover]:!bg-slate-50 [&>button:hover]:!text-slate-600'
+            }
+          `}
           showInteractive={false}
         />
         <MiniMap
-          className="!rounded-xl !border !border-white/[0.06] !bg-[#0c0c10]/90 !backdrop-blur-xl"
+          className={`
+            !rounded-lg !border
+            ${isDark
+              ? '!border-slate-800 !bg-slate-900'
+              : '!border-slate-200 !bg-white'
+            }
+          `}
           nodeColor={(node) => {
             const colors: Record<string, string> = {
-              start: '#22c55e',
-              task: '#6366f1',
-              approval: '#f59e0b',
-              automated: '#a855f7',
-              end: '#ef4444',
+              start: '#4ade80',
+              task: '#60a5fa',
+              approval: '#fbbf24',
+              automated: '#c084fc',
+              end: '#f87171',
             };
-            return colors[node.type ?? ''] ?? '#6b7280';
+            return colors[node.type ?? ''] ?? '#94a3b8';
           }}
-          maskColor="rgba(0,0,0,0.7)"
+          maskColor={isDark ? 'rgba(2,6,23,0.75)' : 'rgba(241,245,249,0.75)'}
         />
       </ReactFlow>
 

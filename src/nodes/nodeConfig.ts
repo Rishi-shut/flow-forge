@@ -4,37 +4,37 @@ export const NODE_PALETTE: NodePaletteItem[] = [
   {
     type: 'start',
     label: 'Start',
-    description: 'Entry point',
-    color: '#22c55e',
-    gradient: 'from-emerald-500/20 to-emerald-600/5',
+    description: 'Entry point of workflow',
+    color: '#4ade80',
+    gradient: 'from-emerald-500/10 to-emerald-600/5',
   },
   {
     type: 'task',
     label: 'Task',
-    description: 'Manual task',
-    color: '#6366f1',
-    gradient: 'from-indigo-500/20 to-indigo-600/5',
+    description: 'Assign a manual task',
+    color: '#60a5fa',
+    gradient: 'from-blue-500/10 to-blue-600/5',
   },
   {
     type: 'approval',
     label: 'Approval',
-    description: 'Gate check',
-    color: '#f59e0b',
-    gradient: 'from-amber-500/20 to-amber-600/5',
+    description: 'Requires sign-off',
+    color: '#fbbf24',
+    gradient: 'from-amber-500/10 to-amber-600/5',
   },
   {
     type: 'automated',
     label: 'Automated',
-    description: 'API action',
-    color: '#a855f7',
-    gradient: 'from-purple-500/20 to-purple-600/5',
+    description: 'API-driven action',
+    color: '#c084fc',
+    gradient: 'from-purple-500/10 to-purple-600/5',
   },
   {
     type: 'end',
     label: 'End',
-    description: 'Finish point',
-    color: '#ef4444',
-    gradient: 'from-red-500/20 to-red-600/5',
+    description: 'Terminates the flow',
+    color: '#f87171',
+    gradient: 'from-red-500/10 to-red-600/5',
   },
 ];
 
@@ -73,5 +73,5 @@ export function getDefaultNodeData(type: string): FlowNodeData {
 }
 
 export function getNodeColor(type: string): string {
-  return NODE_PALETTE.find((n) => n.type === type)?.color ?? '#6b7280';
+  return NODE_PALETTE.find((n) => n.type === type)?.color ?? '#94a3b8';
 }

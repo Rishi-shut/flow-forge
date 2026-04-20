@@ -6,6 +6,9 @@ import {
   FlaskConical,
   ChevronDown,
   Workflow,
+  Sun,
+  Moon,
+  Download,
 } from 'lucide-react';
 import { useWorkflowStore } from '@/store/workflowStore';
 import { useSimulation } from '@/hooks/useSimulation';
@@ -19,14 +22,26 @@ export default function TopBar() {
     serialize,
     nodes,
     setStatus,
+    theme,
+    toggleTheme,
   } = useWorkflowStore();
   const { runSimulation } = useSimulation();
   const [editing, setEditing] = useState(false);
+  const isDark = theme === 'dark';
 
-  const statusColors: Record<string, string> = {
-    draft: 'bg-yellow-500/20 text-yellow-400',
-    active: 'bg-emerald-500/20 text-emerald-400',
-    simulating: 'bg-purple-500/20 text-purple-400',
+  const statusConfig: Record<string, { bg: string; text: string }> = {
+    draft: {
+      bg: isDark ? 'bg-amber-900/30' : 'bg-amber-50',
+      text: isDark ? 'text-amber-400' : 'text-amber-600',
+    },
+    active: {
+      bg: isDark ? 'bg-emerald-900/30' : 'bg-emerald-50',
+      text: isDark ? 'text-emerald-400' : 'text-emerald-600',
+    },
+    simulating: {
+      bg: isDark ? 'bg-blue-900/30' : 'bg-blue-50',
+      text: isDark ? 'text-blue-400' : 'text-blue-600',
+    },
   };
 
   const handleSave = () => {
@@ -45,20 +60,27 @@ export default function TopBar() {
     setStatus('active');
   };
 
+  const sc = statusConfig[status] || statusConfig.draft;
+
   return (
-    <header className="relative z-20 flex h-14 items-center justify-between border-b border-white/[0.06] bg-[#0c0c10]/80 px-5 backdrop-blur-xl">
+    <header
+      className={`
+        relative z-20 flex h-14 items-center justify-between border-b px-5 transition-colors
+        ${isDark ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'}
+      `}
+    >
       {/* Left: Logo + Project Name */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
-            <Workflow size={16} className="text-white" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-700">
+            <Workflow size={15} className="text-slate-300" />
           </div>
-          <span className="text-sm font-bold tracking-tight text-white/90">
+          <span className={`text-sm font-semibold tracking-tight ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
             FlowForge
           </span>
         </div>
 
-        <div className="h-5 w-px bg-white/10" />
+        <div className={`h-5 w-px ${isDark ? 'bg-slate-700' : 'bg-slate-200'}`} />
 
         {editing ? (
           <input
@@ -67,17 +89,24 @@ export default function TopBar() {
             onChange={(e) => setProjectName(e.target.value)}
             onBlur={() => setEditing(false)}
             onKeyDown={(e) => e.key === 'Enter' && setEditing(false)}
-            className="rounded-md border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-500/50"
+            className={`rounded-md border px-2 py-1 text-sm outline-none transition-colors
+              ${isDark
+                ? 'border-slate-600 bg-slate-800 text-slate-200 focus:border-blue-500'
+                : 'border-slate-300 bg-slate-50 text-slate-700 focus:border-blue-500'
+              }
+            `}
             id="project-name-input"
           />
         ) : (
           <button
             onClick={() => setEditing(true)}
-            className="flex items-center gap-1.5 text-sm text-white/70 transition-colors hover:text-white"
+            className={`flex items-center gap-1.5 text-sm transition-colors
+              ${isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-800'}
+            `}
             id="project-name-btn"
           >
             {projectName}
-            <ChevronDown size={12} className="text-white/30" />
+            <ChevronDown size={12} className="opacity-40" />
           </button>
         )}
 
@@ -85,7 +114,7 @@ export default function TopBar() {
           key={status}
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${statusColors[status]}`}
+          className={`rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${sc.bg} ${sc.text}`}
         >
           {status}
         </motion.span>
@@ -93,33 +122,60 @@ export default function TopBar() {
 
       {/* Right: Actions */}
       <div className="flex items-center gap-2">
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors
+            ${isDark
+              ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+              : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+            }
+          `}
+          id="theme-toggle"
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {isDark ? <Sun size={16} /> : <Moon size={16} />}
+        </button>
+
+        <div className={`h-5 w-px ${isDark ? 'bg-slate-700' : 'bg-slate-200'}`} />
+
         <button
           onClick={handleSave}
-          className="flex items-center gap-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-white/60 transition-all hover:bg-white/[0.06] hover:text-white/90"
+          className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all
+            ${isDark
+              ? 'border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
+              : 'border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700'
+            }
+          `}
           id="save-btn"
         >
-          <Save size={14} />
-          Save
+          <Download size={13} />
+          Export
         </button>
 
         <button
           onClick={handleRun}
           disabled={nodes.length === 0}
-          className="flex items-center gap-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-400 transition-all hover:bg-emerald-500/20 disabled:opacity-30 disabled:cursor-not-allowed"
+          className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed
+            ${isDark
+              ? 'border-emerald-800 text-emerald-400 hover:bg-emerald-900/30'
+              : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
+            }
+          `}
           id="run-btn"
         >
-          <Play size={14} />
+          <Play size={13} />
           Run
         </button>
 
         <button
           onClick={runSimulation}
           disabled={isSimulating || nodes.length === 0}
-          className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-1.5 text-xs font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:shadow-indigo-500/40 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex items-center gap-1.5 rounded-lg bg-slate-700 px-4 py-1.5 text-xs font-medium text-slate-200 shadow-sm transition-all hover:bg-slate-600 disabled:opacity-30 disabled:cursor-not-allowed"
           id="simulate-btn"
         >
-          <FlaskConical size={14} />
-          {isSimulating ? 'Simulating...' : 'Simulate'}
+          <FlaskConical size={13} />
+          {isSimulating ? 'Running…' : 'Simulate'}
         </button>
       </div>
     </header>
