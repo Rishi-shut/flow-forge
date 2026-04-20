@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-xs: 480px;
+  --breakpoint-2xs: 380px;
+  --spacing-header: 60px;
+}
+
 /* ── Base ────────────────────────────────────────────────────────────── */
 *,
 *::before,
@@ -7,6 +13,39 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+button, 
+[role="button"],
+select,
+input[type="checkbox"],
+input[type="radio"],
+.react-flow__node,
+.react-flow__edge,
+.react-flow__handle {
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+.simulate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4); }
+  50% { box-shadow: 0 6px 30px rgba(37, 99, 235, 0.6); }
+}
+
+[draggable="true"] {
+  cursor: grab;
+}
+
+[draggable="true"]:active {
+  cursor: grabbing;
 }
 
 html {
@@ -30,8 +69,8 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(113, 113, 122, 0.2);
-  border-radius: 8px;
+  background: rgba(113, 113, 122, 0.15);
+  border-radius: 20px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

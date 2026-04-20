@@ -56,13 +56,13 @@ function BaseNode({ id, type, label, icon, selected, children, showSource = true
         <div className="h-[2px] rounded-t-lg" style={{ backgroundColor: color }} />
 
         {/* Header */}
-        <div className="flex items-center gap-2 px-3 py-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded" style={{ backgroundColor: `${color}15`, color }}>
+        <div className="flex items-center gap-2.5 px-3.5 py-2.5">
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg shadow-sm" style={{ backgroundColor: `${color}15`, color }}>
             {icon}
           </div>
-          <div className="flex flex-col min-w-0">
-            <span className={`text-[12px] font-medium leading-tight truncate ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`}>{label}</span>
-            <span className={`text-[9px] font-medium uppercase tracking-wider ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>{type}</span>
+          <div className="flex flex-col min-w-0 leading-tight">
+            <span className={`text-[12px] font-bold tracking-tight truncate ${isDark ? 'text-zinc-100' : 'text-zinc-800'}`}>{label}</span>
+            <span className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 opacity-60 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>{type}</span>
           </div>
         </div>
 
@@ -78,12 +78,12 @@ function BaseNode({ id, type, label, icon, selected, children, showSource = true
         <Handle
           type="target"
           position={Position.Top}
-          className={`!-top-[5px] !h-2.5 !w-2.5 !rounded-full !border-[1.5px] transition-all duration-150
+          className={`!-top-[6px] !h-3 !w-3 !rounded-full !border-2 transition-all duration-200
             ${isConnecting
-              ? '!border-blue-400 !bg-blue-400 !shadow-[0_0_6px_rgba(96,165,250,0.5)] !scale-[1.4]'
+              ? '!border-blue-500 !bg-blue-500 !shadow-[0_0_8px_rgba(59,130,246,0.6)] !scale-[1.5]'
               : isDark
-                ? '!border-zinc-600 !bg-zinc-800 hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-[1.3]'
-                : '!border-zinc-300 !bg-white hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-[1.3]'
+                ? '!border-zinc-700 !bg-zinc-900 hover:!border-blue-500 hover:!bg-blue-500 hover:!scale-[1.4]'
+                : '!border-zinc-200 !bg-white hover:!border-blue-500 hover:!bg-blue-500 hover:!scale-[1.4]'
             }
           `}
         />
@@ -92,12 +92,12 @@ function BaseNode({ id, type, label, icon, selected, children, showSource = true
         <Handle
           type="source"
           position={Position.Bottom}
-          className={`!-bottom-[5px] !h-2.5 !w-2.5 !rounded-full !border-[1.5px] transition-all duration-150
+          className={`!-bottom-[6px] !h-3 !w-3 !rounded-full !border-2 transition-all duration-200
             ${isConnecting
-              ? '!border-blue-400 !bg-blue-400 !shadow-[0_0_6px_rgba(96,165,250,0.5)] !scale-[1.4]'
+              ? '!border-blue-500 !bg-blue-500 !shadow-[0_0_8px_rgba(59,130,246,0.6)] !scale-[1.5]'
               : isDark
-                ? '!border-zinc-600 !bg-zinc-800 hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-[1.3]'
-                : '!border-zinc-300 !bg-white hover:!border-blue-400 hover:!bg-blue-400 hover:!scale-[1.3]'
+                ? '!border-zinc-700 !bg-zinc-900 hover:!border-blue-500 hover:!bg-blue-500 hover:!scale-[1.4]'
+                : '!border-zinc-200 !bg-white hover:!border-blue-500 hover:!bg-blue-500 hover:!scale-[1.4]'
             }
           `}
         />

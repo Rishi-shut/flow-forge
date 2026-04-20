@@ -32,6 +32,8 @@ interface WorkflowState {
   // ── Selection ───────────────────────────────────────────────────
   selectedNodeId: string | null;
   setSelectedNodeId: (id: string | null) => void;
+  selectedEdgeId: string | null;
+  setSelectedEdgeId: (id: string | null) => void;
 
   // ── UI State ────────────────────────────────────────────────────
   sidebarOpen: boolean;
@@ -111,7 +113,10 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
 
   // ── Selection ─────────────────────────────────────────────────────
   selectedNodeId: null,
-  setSelectedNodeId: (id) => set({ selectedNodeId: id }),
+  setSelectedNodeId: (id) => set({ selectedNodeId: id, selectedEdgeId: null }),
+
+  selectedEdgeId: null,
+  setSelectedEdgeId: (id) => set({ selectedEdgeId: id, selectedNodeId: null }),
 
   // ── UI State ──────────────────────────────────────────────────────
   sidebarOpen: true,

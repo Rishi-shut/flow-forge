@@ -20,7 +20,7 @@ import type { FlowNode, FlowNodeType } from '@/types';
 export default function Canvas() {
   const {
     nodes, edges, onNodesChange, onEdgesChange, onConnect,
-    addNode, setSelectedNodeId, theme,
+    addNode, setSelectedNodeId, setSelectedEdgeId, theme,
   } = useWorkflowStore();
 
   const isDark = theme === 'dark';
@@ -59,7 +59,15 @@ export default function Canvas() {
     [setSelectedNodeId]
   );
 
-  const onPaneClick = useCallback(() => setSelectedNodeId(null), [setSelectedNodeId]);
+  const onEdgeClick = useCallback(
+    (_: React.MouseEvent, edge: { id: string }) => setSelectedEdgeId(edge.id),
+    [setSelectedEdgeId]
+  );
+
+  const onPaneClick = useCallback(() => {
+    setSelectedNodeId(null);
+    setSelectedEdgeId(null);
+  }, [setSelectedNodeId, setSelectedEdgeId]);
 
   const edgeStroke = isDark ? '#3f3f46' : '#d4d4d8';
 
@@ -79,6 +87,7 @@ export default function Canvas() {
         onDrop={onDrop}
         onDragOver={onDragOver}
         onNodeClick={onNodeClick}
+        onEdgeClick={onEdgeClick}
         onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
         fitView

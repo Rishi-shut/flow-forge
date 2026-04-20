@@ -65,170 +65,185 @@ export default function TopBar() {
   return (
     <header
       className={`
-        relative z-50 flex h-[56px] items-center justify-between border-b px-4 sm:px-6 transition-all shadow-sm
-        ${isDark ? 'border-zinc-800 bg-zinc-900' : 'border-zinc-200 bg-white'}
+        relative z-50 flex h-[60px] items-center border-b transition-all shadow-sm
+        ${isDark ? 'border-zinc-800 bg-zinc-900/95' : 'border-zinc-200 bg-white/95'}
       `}
+      style={{ backdropFilter: 'blur(12px)' }}
     >
-      {/* Left: Logo + Name + Status */}
-      <div className="flex items-center gap-4 min-w-0">
-        <div className="flex items-center gap-2.5 shrink-0">
-          <div className={`flex h-8 w-8 items-center justify-center rounded-lg shadow-sm
-            ${isDark ? 'bg-zinc-800 ring-1 ring-zinc-700' : 'bg-zinc-100 ring-1 ring-zinc-200'}
-          `}>
-            <Workflow size={16} className={isDark ? 'text-blue-400' : 'text-blue-600'} />
+      <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between px-6 sm:px-10">
+        
+        {/* Left: Logo + Name + Status */}
+        <div className="flex items-center gap-6 min-w-0">
+          <div className="flex items-center gap-3 shrink-0">
+            <div className={`flex h-9 w-9 items-center justify-center rounded-xl shadow-sm transition-transform hover:scale-105
+              ${isDark ? 'bg-zinc-800 ring-1 ring-zinc-700' : 'bg-zinc-100 ring-1 ring-zinc-200'}
+            `}>
+              <Workflow size={18} className={isDark ? 'text-blue-400' : 'text-blue-600'} />
+            </div>
+            <span className={`hidden md:inline text-[15px] font-black tracking-[-0.02em] uppercase ${isDark ? 'text-zinc-100' : 'text-zinc-900'}`}>
+              FlowForge
+            </span>
           </div>
-          <span className={`hidden md:inline text-sm font-bold tracking-tight ${isDark ? 'text-zinc-100' : 'text-zinc-800'}`}>
-            FlowForge
-          </span>
+
+          <div className={`hidden lg:block h-6 w-px ${isDark ? 'bg-zinc-800' : 'bg-zinc-200'}`} />
+
+          {/* Project Name Area */}
+          <div className="flex items-center gap-4">
+            {editing ? (
+              <input
+                autoFocus
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+                onBlur={() => setEditing(false)}
+                onKeyDown={(e) => e.key === 'Enter' && setEditing(false)}
+                className={`w-40 sm:w-64 rounded-xl border px-4 py-2 text-sm outline-none transition-all shadow-inner
+                  ${isDark
+                    ? 'border-zinc-700 bg-zinc-800 text-zinc-100 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10'
+                    : 'border-zinc-300 bg-white text-zinc-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10'
+                  }
+                `}
+                id="project-name-input"
+              />
+            ) : (
+              <button
+                onClick={() => setEditing(true)}
+                className={`group flex items-center gap-2 text-sm font-bold tracking-tight transition-colors
+                  ${isDark ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-500 hover:text-zinc-900'}
+                `}
+                id="project-name-btn"
+              >
+                <span className="truncate max-w-[140px] sm:max-w-[320px]">{projectName}</span>
+                <ChevronDown size={14} className="shrink-0 opacity-40 group-hover:opacity-100 transition-transform group-hover:translate-y-0.5" />
+              </button>
+            )}
+
+            <div className="hidden sm:flex items-center gap-2">
+              {/* Node Count Badge */}
+              <div className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ring-1 transition-all
+                ${isDark ? 'bg-blue-500/10 ring-blue-500/20 text-blue-400' : 'bg-blue-50 ring-blue-100 text-blue-600'}
+              `}>
+                <span>{nodes.length}</span>
+                <span className="opacity-60">{nodes.length === 1 ? 'Node' : 'Nodes'}</span>
+              </div>
+
+              {/* Status Badge */}
+              <div className={`hidden 2xs:flex items-center gap-2 rounded-lg px-2.5 py-1 text-[10px] font-black uppercase tracking-widest ring-1 transition-all duration-300
+                ${isDark ? 'bg-zinc-800/50 ring-zinc-800 text-zinc-400' : 'bg-zinc-100/50 ring-zinc-200 text-zinc-500'}
+              `}>
+                <div className={`h-1.5 w-1.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.1)] ${sc.dot} animate-pulse`} />
+                <span>{sc.label}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className={`hidden sm:block h-5 w-px ${isDark ? 'bg-zinc-800' : 'bg-zinc-200'}`} />
-
-        {/* Project Name Area */}
-        <div className="flex items-center gap-3">
-          {editing ? (
-            <input
-              autoFocus
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              onBlur={() => setEditing(false)}
-              onKeyDown={(e) => e.key === 'Enter' && setEditing(false)}
-              className={`w-40 sm:w-56 rounded-md border px-3 py-1.5 text-sm outline-none transition-all shadow-inner
+        {/* Right: Actions */}
+        <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-opacity-50" style={{ backgroundColor: isDark ? 'rgba(39, 39, 42, 0.5)' : 'rgba(244, 244, 245, 0.5)' }}>
+            {/* Help */}
+            <button
+              onClick={() => setHelpOpen(true)}
+              className={`flex h-9 w-9 items-center justify-center rounded-lg transition-all active:scale-90
                 ${isDark
-                  ? 'border-zinc-700 bg-zinc-800 text-zinc-100 focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10'
-                  : 'border-zinc-300 bg-white text-zinc-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10'
+                  ? 'text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300'
+                  : 'text-zinc-400 hover:bg-zinc-200 hover:text-zinc-600'
                 }
               `}
-              id="project-name-input"
-            />
-          ) : (
-            <button
-              onClick={() => setEditing(true)}
-              className={`group flex items-center gap-1.5 text-sm font-medium transition-colors
-                ${isDark ? 'text-zinc-400 hover:text-zinc-100' : 'text-zinc-500 hover:text-zinc-900'}
-              `}
-              id="project-name-btn"
+              title="Help & Components"
             >
-              <span className="truncate max-w-[140px] sm:max-w-[240px]">{projectName}</span>
-              <ChevronDown size={14} className="shrink-0 opacity-40 group-hover:opacity-100" />
+              <HelpCircle size={18} />
             </button>
-          )}
 
-          {/* Status Badge */}
-          <div className={`hidden xs:flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest ring-1
-            ${isDark ? 'bg-zinc-800/50 ring-zinc-800' : 'bg-zinc-100/50 ring-zinc-200'}
-          `}>
-            <div className={`h-1.5 w-1.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.1)] ${sc.dot}`} />
-            <span className={sc.text}>{sc.label}</span>
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className={`flex h-9 w-9 items-center justify-center rounded-lg transition-all active:scale-90
+                ${isDark
+                  ? 'text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300'
+                  : 'text-zinc-400 hover:bg-zinc-200 hover:text-zinc-600'
+                }
+              `}
+              id="theme-toggle"
+            >
+              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
           </div>
-        </div>
-      </div>
 
-      {/* Right: Actions */}
-      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-        <div className="flex items-center gap-1">
-          {/* Help */}
-          <button
-            onClick={() => setHelpOpen(true)}
-            className={`flex h-9 w-9 items-center justify-center rounded-lg transition-all
-              ${isDark
-                ? 'text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300'
-                : 'text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600'
-              }
-            `}
-            title="Help & Components"
-          >
-            <HelpCircle size={18} />
-          </button>
+          <div className={`hidden sm:block h-6 w-px ${isDark ? 'bg-zinc-800' : 'bg-zinc-200'}`} />
 
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className={`flex h-9 w-9 items-center justify-center rounded-lg transition-all
-              ${isDark
-                ? 'text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300'
-                : 'text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600'
-              }
-            `}
-            id="theme-toggle"
-          >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-        </div>
+          {/* Action Island */}
+          <div className={`flex items-center gap-4 p-1.5 rounded-2xl ring-1 shadow-lg shrink-0
+            ${isDark ? 'bg-zinc-950/40 ring-white/5 shadow-black/20' : 'bg-zinc-100/40 ring-black/5 shadow-zinc-200/50'}
+          `} style={{ backdropFilter: 'blur(4px)' }}>
+            {/* Export */}
+            <button
+              onClick={handleExport}
+              disabled={nodes.length === 0}
+              className={`
+                flex h-9 items-center gap-2 rounded-xl px-3 text-xs font-bold tracking-tight transition-all disabled:opacity-30 active:scale-95
+                ${isDark
+                  ? 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-zinc-100'
+                  : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900'
+                }
+              `}
+              id="export-btn"
+            >
+              <AnimatePresence mode="wait">
+                {saved ? (
+                  <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                    <Check size={14} className="text-emerald-500" />
+                  </motion.div>
+                ) : (
+                  <motion.div key="icon" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                    <Download size={14} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <span className="hidden xl:inline">Export</span>
+            </button>
 
-        <div className={`h-5 w-px ${isDark ? 'bg-zinc-800' : 'bg-zinc-200'}`} />
+            {/* Run */}
+            <button
+              onClick={handleRun}
+              disabled={nodes.length === 0}
+              className={`
+                flex h-9 items-center gap-2 rounded-xl px-3 text-xs font-black uppercase tracking-wider transition-all disabled:opacity-30 active:scale-95
+                ${isDark
+                  ? 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
+                  : 'bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20'
+                }
+              `}
+              id="run-btn"
+            >
+              <Play size={14} fill="currentColor" />
+              <span className="hidden xl:inline">Run</span>
+            </button>
 
-        <div className="flex items-center gap-2">
-          {/* Export */}
-          <button
-            onClick={handleExport}
-            disabled={nodes.length === 0}
-            className={`
-              flex h-9 items-center gap-2 rounded-lg px-3.5 text-xs font-semibold tracking-tight transition-all disabled:opacity-30
-              ${isDark
-                ? 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-zinc-100 active:scale-95'
-                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900 active:scale-95'
-              }
-            `}
-            id="export-btn"
-          >
-            <AnimatePresence mode="wait">
-              {saved ? (
-                <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                  <Check size={14} className="text-emerald-500" />
-                </motion.div>
+            {/* Simulate - High Prominence */}
+            <button
+              onClick={runSimulation}
+              disabled={isSimulating || nodes.length === 0}
+              className={`
+                relative flex h-9 items-center gap-2 rounded-xl px-4 text-xs font-black uppercase tracking-widest transition-all disabled:opacity-50
+                shadow-[0_4px_16px_rgba(37,99,235,0.4)] hover:shadow-[0_6px_24px_rgba(37,99,235,0.5)]
+                active:scale-95 text-white
+                bg-gradient-to-br from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600
+              `}
+              id="simulate-btn"
+            >
+              {isSimulating ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" />
+                  <span>Working…</span>
+                </>
               ) : (
-                <motion.div key="icon" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                  <Download size={14} />
-                </motion.div>
+                <>
+                  <FlaskConical size={14} />
+                  <span className="hidden sm:inline">Simulate</span>
+                </>
               )}
-            </AnimatePresence>
-            <span className="hidden sm:inline">Export</span>
-          </button>
-
-          {/* Run */}
-          <button
-            onClick={handleRun}
-            disabled={nodes.length === 0}
-            className={`
-              flex h-9 items-center gap-2 rounded-lg px-4 text-xs font-bold tracking-tight transition-all disabled:opacity-30
-              ${isDark
-                ? 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 active:scale-95'
-                : 'bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 active:scale-95'
-              }
-            `}
-            id="run-btn"
-          >
-            <Play size={14} fill="currentColor" />
-            <span className="hidden sm:inline">Run</span>
-          </button>
-
-          {/* Simulate - High Prominence */}
-          <button
-            onClick={runSimulation}
-            disabled={isSimulating || nodes.length === 0}
-            className={`
-              relative flex h-9 items-center gap-2 rounded-lg px-4 text-xs font-bold tracking-tight transition-all disabled:opacity-50
-              shadow-[0_4px_12px_rgba(59,130,246,0.25)] hover:shadow-[0_6px_16px_rgba(59,130,246,0.35)]
-              ${isDark
-                ? 'bg-blue-600 text-white hover:bg-blue-500 active:scale-95'
-                : 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95'
-              }
-            `}
-            id="simulate-btn"
-          >
-            {isSimulating ? (
-              <>
-                <Loader2 size={14} className="animate-spin" />
-                <span>Working…</span>
-              </>
-            ) : (
-              <>
-                <FlaskConical size={14} />
-                <span>Simulate</span>
-              </>
-            )}
-          </button>
+            </button>
+          </div>
         </div>
       </div>
 

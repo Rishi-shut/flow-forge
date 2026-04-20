@@ -47,16 +47,18 @@ export default function Sidebar() {
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       className={`
         relative z-20 flex flex-col border-r transition-colors shrink-0
-        ${isDark ? 'border-zinc-800/80 bg-zinc-900' : 'border-zinc-200 bg-zinc-50'}
+        ${isDark ? 'border-zinc-800/80 bg-zinc-900/95' : 'border-zinc-200 bg-zinc-50/95'}
+        max-sm:absolute max-sm:h-full max-sm:shadow-2xl
       `}
+      style={{ backdropFilter: 'blur(10px)' }}
     >
       {/* Toggle */}
       <button
         onClick={toggleSidebar}
-        className={`flex h-[42px] items-center justify-center border-b transition-colors
+        className={`flex h-[60px] items-center justify-center border-b transition-colors
           ${isDark
-            ? 'border-zinc-800/80 text-zinc-500 hover:text-zinc-300'
-            : 'border-zinc-200 text-zinc-400 hover:text-zinc-600'
+            ? 'border-zinc-800/80 text-zinc-500 hover:bg-zinc-800/20 hover:text-zinc-300'
+            : 'border-zinc-200 text-zinc-400 hover:bg-zinc-200/20 hover:text-zinc-600'
           }
         `}
         id="sidebar-toggle"
@@ -92,8 +94,8 @@ export default function Sidebar() {
                 className={`
                   group flex cursor-pointer items-center gap-3 rounded-xl px-2.5 py-2 transition-all active:scale-[0.98]
                   ${isDark
-                    ? 'hover:bg-zinc-800'
-                    : 'hover:bg-zinc-200/50 shadow-sm hover:shadow'
+                    ? 'hover:bg-zinc-800/80 active:bg-zinc-800'
+                    : 'hover:bg-white hover:shadow-md hover:ring-1 hover:ring-zinc-200 active:shadow-sm'
                   }
                   ${!sidebarOpen ? 'justify-center mx-1.5' : 'mx-2'}
                 `}
@@ -112,7 +114,7 @@ export default function Sidebar() {
                     className="flex flex-1 items-center justify-between min-w-0"
                   >
                     <div className="flex flex-col min-w-0">
-                      <span className={`text-[13px] font-bold tracking-tight ${isDark ? 'text-zinc-200' : 'text-zinc-800'}`}>
+                      <span className={`text-[12px] font-bold tracking-tight ${isDark ? 'text-zinc-200' : 'text-zinc-800'}`}>
                         {item.label}
                       </span>
                       <span className={`text-[11px] font-medium leading-tight ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
@@ -131,12 +133,13 @@ export default function Sidebar() {
                     animate={{ opacity: 1, x: 0, scale: 1 }}
                     exit={{ opacity: 0, x: -4, scale: 0.96 }}
                     transition={{ duration: 0.15 }}
-                    className={`absolute left-full top-0 z-50 ml-2 w-56 rounded-lg border p-3 shadow-lg
+                    className={`absolute left-full top-0 z-50 ml-2 w-56 rounded-lg border p-3 shadow-xl
                       ${isDark
-                        ? 'border-zinc-700 bg-zinc-800 shadow-black/30'
-                        : 'border-zinc-200 bg-white shadow-zinc-200/60'
+                        ? 'border-zinc-700 bg-zinc-800/95 shadow-black/40'
+                        : 'border-zinc-200 bg-white/95 shadow-zinc-200/80'
                       }
                     `}
+                    style={{ backdropFilter: 'blur(8px)' }}
                   >
                     <div className="flex items-center gap-2 mb-1.5">
                       <div
